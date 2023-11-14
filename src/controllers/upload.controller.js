@@ -1,6 +1,7 @@
 import { deleteFile as deleteMulterFile } from '../middleware/delete-file.js'
 import { validateUpload, validateParams } from '../schemas/upload.schema.js'
 import { HTTP_RESPONSE } from '../helpers/http-status.js'
+import { VALID_EXTENSIONS } from '../helpers/valid-extensions.js'
 
 export class UploadController {
   constructor({ uploadModel }) {
@@ -9,6 +10,10 @@ export class UploadController {
 
   create = async (request, response, next) => {
     try {
+      if (!request.file) {
+        return HTTP_RESPONSE.BAD_REQUEST(response, `Valid file is required. Please try again. Valid extensions are ${VALID_EXTENSIONS.join(', ')}`)
+      }
+
       const result = validateUpload(request.file)
 
       if (!result.success) {
