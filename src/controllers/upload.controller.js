@@ -10,21 +10,21 @@ export class UploadController {
 
   create = async (request, response, next) => {
     try {
-      if (!request.file) {
+      console.log(request.files)
+
+      if (!request.files) {
         return HTTP_RESPONSE.BAD_REQUEST(response, `Valid file is required. Please try again. Valid extensions are ${VALID_EXTENSIONS.join(', ')}`)
       }
 
-      const result = validateUpload(request.file)
+      const result = validateUpload(request.files)
 
       if (!result.success) {
         return HTTP_RESPONSE.BAD_REQUEST(response, result?.message, result?.error?.message)
       }
 
-      const newFile = await this.uploadModel.create(request.file)
+      const newFiles = await this.uploadModel.create(request.files)
 
-      deleteMulterFile(request, response, next)
-
-      return HTTP_RESPONSE.CREATED(response, newFile)
+      return HTTP_RESPONSE.CREATED(response, newFiles)
     } catch (error) {
       next(error)
     }
@@ -54,7 +54,9 @@ export class UploadController {
         return HTTP_RESPONSE.NOT_FOUND(response, 'File not found')
       }
 
-      return HTTP_RESPONSE.OK(response, file)
+      return HTTP_RESPONSE.OK(response, {
+        url: file
+      })
     } catch (error) {
       next(error)
     }

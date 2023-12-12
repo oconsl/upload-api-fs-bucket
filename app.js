@@ -1,4 +1,5 @@
 import express from 'express'
+import { expressjwt as jwt } from 'express-jwt'
 import { corsMiddleware } from './src/middleware/cors.js'
 import { uploadMiddleware } from './src/middleware/multer.js'
 import { createUploadRouter } from './src/routes/upload.router.js'
@@ -13,6 +14,14 @@ export const createAppServer = ({ uploadModel }) => {
   app.use(uploadMiddleware)
   app.disable('x-powered-by')
 
+  // app.all(
+  //   '/api/*',
+  //   jwt({
+  //     secret: process.env.TOKEN_SECRET,
+  //     algorithms: ['HS256'],
+  //   })
+  // )
+
   app.use('/api', createUploadRouter({ uploadModel }))
   app.use('/api', testServerRouter)
 
@@ -23,5 +32,7 @@ export const createAppServer = ({ uploadModel }) => {
   app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`)
   })
+
+  return app
 }
 

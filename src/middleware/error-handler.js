@@ -10,6 +10,14 @@ const ERROR_HANDLER = {
     }))
     return HTTP_RESPONSE.UNPROCESSABLE_ENTITY(response, message, errorData)
   },
+  MulterError: (response, _error) => {
+    const message = 'Provide a valid file to upload'
+    return HTTP_RESPONSE.BAD_REQUEST(response, message, 'Invalid file extension')
+  },
+  UnauthorizedError: (response, error) => {
+    const message = 'Provide a valid token to access this resource'
+    return HTTP_RESPONSE.UNAUTHORIZED(response, message, error)
+  },
   defaultError: (response, error) => {
     const message = 'Something went wrong'
     return HTTP_RESPONSE.INTERNAL_SERVER_ERROR(response, message, error)
@@ -18,7 +26,7 @@ const ERROR_HANDLER = {
 
 export const errorHandler = (error, _request, response, _next) => {
   let option = error?.name
-  console.log(error)
+  console.log(option)
 
   if (error instanceof ZodError) {
     option = 'validationError'

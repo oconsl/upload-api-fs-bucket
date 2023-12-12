@@ -6,11 +6,11 @@ export const createUploadRouter = ({ uploadModel }) => {
 
   const uploadController = new UploadController({ uploadModel })
 
-  uploadRouter.route('/file')
+  uploadRouter.route('/upload')
     .get(uploadController.list)
     .post(uploadController.create)
 
-  uploadRouter.route('/file/:fileName')
+  uploadRouter.route('/upload/:fileName')
     .get(uploadController.read)
     .delete(uploadController.delete)
 
